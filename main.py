@@ -11,7 +11,7 @@ def press_space(stop_event):
         # kb_controller.release(keyboard.Key.space)
         ms_controller.press(mouse.Button.left)
         ms_controller.release(mouse.Button.left)
-        time.sleep(0.1)
+        time.sleep(0.05)
 
 def on_click(x, y, button, pressed):
     global process, right_click_count, shift_pressed
