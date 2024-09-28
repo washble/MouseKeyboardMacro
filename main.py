@@ -12,13 +12,13 @@ def press_space(stop_event):
         
         # kb_controller.press(keyboard.Key.f5)
         # kb_controller.release(keyboard.Key.f5)
+        # time.sleep(4)
         
         ms_controller.press(mouse.Button.left)
         ms_controller.release(mouse.Button.left)
         time.sleep(0.05)
         
         # kb_controller.press(keyboard.KeyCode.from_char('w'))
-        # time.sleep(4)
 
 def on_click(x, y, button, pressed):
     global process, right_click_count, shift_pressed
