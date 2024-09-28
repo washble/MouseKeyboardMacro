@@ -4,17 +4,21 @@ import sys
 from pynput import mouse, keyboard  # pip install pynput
 
 def press_space(stop_event):
-    kb_controller = keyboard.Controller()
-    # ms_controller = mouse.Controller()
+    # kb_controller = keyboard.Controller()
+    ms_controller = mouse.Controller()
     while not stop_event.is_set():
         # kb_controller.press(keyboard.Key.space)
         # kb_controller.release(keyboard.Key.space)
         
-        # ms_controller.press(mouse.Button.left)
-        # ms_controller.release(mouse.Button.left)
-        # time.sleep(0.05)
+        # kb_controller.press(keyboard.Key.f5)
+        # kb_controller.release(keyboard.Key.f5)
         
-        kb_controller.press(keyboard.KeyCode.from_char('w'))
+        ms_controller.press(mouse.Button.left)
+        ms_controller.release(mouse.Button.left)
+        time.sleep(0.05)
+        
+        # kb_controller.press(keyboard.KeyCode.from_char('w'))
+        # time.sleep(4)
 
 def on_click(x, y, button, pressed):
     global process, right_click_count, shift_pressed
