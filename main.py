@@ -34,56 +34,80 @@ def mecro_event(stop_event):
         
         # kb_controller.press(keyboard.KeyCode.from_char('w'))
 
+# unused function
 def on_click(x, y, button, pressed):
-    global process, right_click_count, shift_pressed
+    global start_pressed
+    if button == mouse.Button.left and start_pressed and pressed:
+        mecro_start()
+    elif button == mouse.Button.right and pressed:
+        if start_pressed:
+            mecro_pause()
+        else:
+            mecro_stop()
+            listener_stop()
+            exe_exit()
+            
+def mecro_start():
+    global process
+    if process is None or not process.is_alive():
+        print("Starting to macro.")
+        stop_event.clear()
+        process = multiprocessing.Process(target=mecro_event, args=(stop_event,))
+        process.start()
+        
+def mecro_pause():
+    global process
+    if process:
+        print("Stopping the macro.")
+        stop_event.set()
+        process.join()
+        process = None
 
-    if shift_pressed:
-        if button == mouse.Button.left and pressed:
-            right_click_count = 0
-            if process is None or not process.is_alive():
-                print("Shift + Left button pressed. Starting to macro.")
-                stop_event.clear()
-                process = multiprocessing.Process(target=mecro_event, args=(stop_event,))
-                process.start()
-        elif button == mouse.Button.right and pressed:
-            right_click_count += 1
-            if right_click_count == 1:
-                print("Shift + Right button pressed once. Stopping the macro.")
-                if process:
-                    stop_event.set()
-                    process.join()
-                    process = None
-            elif right_click_count == 2:
-                print("Shift + Right button pressed twice. Exiting the script.")
-                if process:
-                    stop_event.set()
-                    process.join()
-                listener.stop()
-                keyboard_listener.stop()
-                sys.exit()
-
+def mecro_stop():
+    global process
+    if process:
+        stop_event.set()
+        process.join()
+        
+def listener_stop():
+    global mouse_listener, keyboard_listener
+    if mouse_listener:
+        mouse_listener.stop()
+    if keyboard_listener:
+        keyboard_listener.stop()
+        
+def exe_exit():
+    print("Exiting the script.")
+    sys.exit()
+    
 def on_press(key):
-    global shift_pressed
-    if key == keyboard.Key.shift_l:
-        shift_pressed = True
+    global start_pressed
+    if key == keyboard.Key.page_up:
+        start_pressed = True
+        mecro_start()
 
 def on_release(key):
-    global shift_pressed
-    if key == keyboard.Key.shift_l:
-        shift_pressed = False
+    global start_pressed
+    if key == keyboard.Key.page_down:
+        if start_pressed:
+            start_pressed = False
+            mecro_pause()
+        else:
+            mecro_stop()
+            listener_stop()
+            exe_exit()
 
 if __name__ == "__main__":
     multiprocessing.freeze_support() # need for pyinstall exe
     stop_event = multiprocessing.Event()
     process = None
-    right_click_count = 0
-    shift_pressed = False
+    start_pressed = False
 
     keyboard_listener = keyboard.Listener(on_press=on_press, on_release=on_release)
     keyboard_listener.start()
 
-    listener = mouse.Listener(on_click=on_click)
-    listener.start()
+    mouse_listener = mouse.Listener(on_click=on_click)
+    # mouse_listener.start()
 
-    listener.join()
     keyboard_listener.join()
+    # mouse_listener.join()
