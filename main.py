@@ -2,6 +2,18 @@ import time
 import multiprocessing
 import sys
 from pynput import mouse, keyboard  # pip install pynput
+import random
+
+'''
+pip install pyinstaller
+
+[exe build]
+- Just make exe -
+> pyinstaller main.py
+
+- Only One exe File -
+> pyinstaller -F main.py
+'''
 
 def press_space(stop_event):
     # kb_controller = keyboard.Controller()
@@ -9,14 +21,16 @@ def press_space(stop_event):
     while not stop_event.is_set():
         # kb_controller.press(keyboard.Key.space)
         # kb_controller.release(keyboard.Key.space)
+        # time.sleep(2)
         
         # kb_controller.press(keyboard.Key.f5)
         # kb_controller.release(keyboard.Key.f5)
-        # time.sleep(4)
+        # time.sleep(2.5 + random.random())
         
         ms_controller.press(mouse.Button.left)
         ms_controller.release(mouse.Button.left)
-        time.sleep(0.05)
+        # time.sleep(0.02)
+        time.sleep(0.1)
         
         # kb_controller.press(keyboard.KeyCode.from_char('w'))
 
