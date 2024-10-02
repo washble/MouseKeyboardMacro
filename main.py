@@ -15,7 +15,7 @@ pip install pyinstaller
 > pyinstaller -F main.py
 '''
 
-def press_space(stop_event):
+def mecro_event(stop_event):
     # kb_controller = keyboard.Controller()
     ms_controller = mouse.Controller()
     while not stop_event.is_set():
@@ -43,7 +43,7 @@ def on_click(x, y, button, pressed):
             if process is None or not process.is_alive():
                 print("Shift + Left button pressed. Starting to macro.")
                 stop_event.clear()
-                process = multiprocessing.Process(target=press_space, args=(stop_event,))
+                process = multiprocessing.Process(target=mecro_event, args=(stop_event,))
                 process.start()
         elif button == mouse.Button.right and pressed:
             right_click_count += 1
