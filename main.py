@@ -1,7 +1,7 @@
 import time
 import multiprocessing
 import sys
-from pynput import mouse, keyboard  # pip install pynput
+from pynput import mouse, keyboard  # pip install pynput,  #1.6.8 version because pyinstaller
 import random
 
 '''
@@ -41,14 +41,14 @@ def on_click(x, y, button, pressed):
         if button == mouse.Button.left and pressed:
             right_click_count = 0
             if process is None or not process.is_alive():
-                print("Shift + Left button pressed. Starting to press space.")
+                print("Shift + Left button pressed. Starting to macro.")
                 stop_event.clear()
                 process = multiprocessing.Process(target=press_space, args=(stop_event,))
                 process.start()
         elif button == mouse.Button.right and pressed:
             right_click_count += 1
             if right_click_count == 1:
-                print("Shift + Right button pressed once. Stopping the process.")
+                print("Shift + Right button pressed once. Stopping the macro.")
                 if process:
                     stop_event.set()
                     process.join()
