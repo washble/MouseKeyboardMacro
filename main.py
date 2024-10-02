@@ -1,6 +1,5 @@
 import time
 import multiprocessing
-from multiprocessing import Queue, freeze_support
 import sys
 from pynput import mouse, keyboard  # pip install pynput,  #1.6.8 version because pyinstaller
 import random
@@ -74,7 +73,7 @@ def on_release(key):
         shift_pressed = False
 
 if __name__ == "__main__":
-    freeze_support()
+    multiprocessing.freeze_support() # need for pyinstall exe
     stop_event = multiprocessing.Event()
     process = None
     right_click_count = 0
