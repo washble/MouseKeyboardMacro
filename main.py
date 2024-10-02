@@ -98,6 +98,8 @@ def on_release(key):
             exe_exit()
 
 if __name__ == "__main__":
+    print("Version 1.0.0")
+    
     multiprocessing.freeze_support() # need for pyinstall exe
     stop_event = multiprocessing.Event()
     process = None
