@@ -30,7 +30,7 @@ def mecro_event(stop_event):
         ms_controller.press(mouse.Button.left)
         ms_controller.release(mouse.Button.left)
         # time.sleep(0.02)
-        time.sleep(0.1)
+        time.sleep(0.01)
         
         # kb_controller.press(keyboard.KeyCode.from_char('w'))
 
