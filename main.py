@@ -28,19 +28,22 @@ def mecro_event(stop_event):
         # time.sleep(2.5 + random.random())
         
         ms_controller.press(mouse.Button.left)
+        time.sleep(0.001)
         ms_controller.release(mouse.Button.left)
-        # time.sleep(0.02)
-        time.sleep(0.01)
+        time.sleep(1.5)
+        # time.sleep(0.01)
         
         # kb_controller.press(keyboard.KeyCode.from_char('w'))
 
-# unused function
 def on_click(x, y, button, pressed):
     global start_pressed
-    if button == mouse.Button.left and start_pressed and pressed:
-        mecro_start()
+    if button == mouse.Button.left and pressed:
+        if not start_pressed:
+            start_pressed = True
+            mecro_start()
     elif button == mouse.Button.right and pressed:
         if start_pressed:
+            start_pressed = False
             mecro_pause()
         else:
             mecro_stop()
@@ -109,7 +112,7 @@ if __name__ == "__main__":
     keyboard_listener.start()
 
     mouse_listener = mouse.Listener(on_click=on_click)
-    # mouse_listener.start()
+    mouse_listener.start()
 
     keyboard_listener.join()
-    # mouse_listener.join()
+    mouse_listener.join()
