@@ -38,7 +38,7 @@ def mecro_event(stop_event):
 def on_click(x, y, button, pressed):
     global start_pressed, mouse_controll_lock
     
-    if button == mouse.Button.middle and pressed:
+    if button == mouse.Button.middle and not start_pressed and pressed:
         mouse_controll_lock = not mouse_controll_lock
         print(f"Mouse Control is locked: {mouse_controll_lock}")
     
