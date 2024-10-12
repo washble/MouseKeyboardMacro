@@ -36,7 +36,15 @@ def mecro_event(stop_event):
         # kb_controller.press(keyboard.KeyCode.from_char('w'))
 
 def on_click(x, y, button, pressed):
-    global start_pressed
+    global start_pressed, mouse_controll_lock
+    
+    if button == mouse.Button.middle and pressed:
+        mouse_controll_lock = not mouse_controll_lock
+        print(f"Mouse Control is locked: {mouse_controll_lock}")
+    
+    if mouse_controll_lock:
+        return
+    
     if button == mouse.Button.left and pressed:
         if not start_pressed:
             start_pressed = True
@@ -107,6 +115,7 @@ if __name__ == "__main__":
     stop_event = multiprocessing.Event()
     process = None
     start_pressed = False
+    mouse_controll_lock = False
 
     keyboard_listener = keyboard.Listener(on_press=on_press, on_release=on_release)
     keyboard_listener.start()
