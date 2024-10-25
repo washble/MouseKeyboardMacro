@@ -2,7 +2,9 @@ import time
 import multiprocessing
 import sys
 from pynput import mouse, keyboard  # pip install pynput,  #1.6.8 version because pyinstaller
-import random
+# import random
+# import cv2  # pip install opencv-python
+import pyautogui  # pip install PyAutoGUI
 
 '''
 pip install pyinstaller
@@ -15,9 +17,9 @@ pip install pyinstaller
 > pyinstaller -F main.py
 '''
 
-def mecro_event(stop_event):
-    # kb_controller = keyboard.Controller()
-    ms_controller = mouse.Controller()
+kb_controller = keyboard.Controller()
+ms_controller = mouse.Controller()
+def mecro_event(stop_event):  
     while not stop_event.is_set():
         # kb_controller.press(keyboard.Key.space)
         # kb_controller.release(keyboard.Key.space)
@@ -30,11 +32,30 @@ def mecro_event(stop_event):
         ms_controller.press(mouse.Button.left)
         time.sleep(0.001)
         ms_controller.release(mouse.Button.left)
-        time.sleep(1.5)
-        # time.sleep(0.01)
+        # time.sleep(1.5)
+        time.sleep(0.01)
         
         # kb_controller.press(keyboard.KeyCode.from_char('w'))
 
+# Image Click Version
+images = ["./1.png", "./2.png", "./3.png", "./4.png"]
+def image_mecro_event(stop_event):
+    while not stop_event.is_set():
+        for image_path in images:
+            while not stop_event.is_set():
+                result = image_check_screen_all(image_path)
+                if(result):
+                    pyautogui.moveTo(image_position_x, image_position_y)
+                    # pyautogui.click(x=image_position_x, y=image_position_y)
+                    # time.sleep(0.5)
+                    
+                    time.sleep(1)
+                    ms_controller.press(mouse.Button.left)
+                    time.sleep(0.02)
+                    ms_controller.release(mouse.Button.left)
+                    time.sleep(1)
+                    break
+        
 def on_click(x, y, button, pressed):
     global start_pressed, mouse_controll_lock
     
@@ -57,15 +78,16 @@ def on_click(x, y, button, pressed):
             mecro_stop()
             listener_stop()
             exe_exit()
-            
+
 def mecro_start():
-    global process
+    global process, start_pressed
     if process is None or not process.is_alive():
         print("Starting to macro.")
         stop_event.clear()
-        process = multiprocessing.Process(target=mecro_event, args=(stop_event,))
+        # process = multiprocessing.Process(target=mecro_event, args=(stop_event,))
+        process = multiprocessing.Process(target=image_mecro_event, args=(stop_event,))
         process.start()
-        
+            
 def mecro_pause():
     global process
     if process:
@@ -107,6 +129,24 @@ def on_release(key):
             mecro_stop()
             listener_stop()
             exe_exit()
+            
+def image_check_screen_all(image):
+    global image_position_x, image_position_y
+    try:
+        image_position_x, image_position_y = pyautogui.locateCenterOnScreen(image, confidence=0.95)
+        return True
+    except Exception as e:
+        print(f'Error in {image} image_check: {e}')
+        return False
+            
+def image_check_screen_range(image, screen_range):
+    global image_position_x, image_position_y
+    try:
+        image_position_x, image_position_y = pyautogui.locateCenterOnScreen(image, confidence=0.95, region=screen_range)
+        return True
+    except Exception as e:
+        print(f'Error in {image} image_check: {e}')
+        return False
 
 if __name__ == "__main__":
     print("Version 1.0.0")
@@ -114,8 +154,11 @@ if __name__ == "__main__":
     multiprocessing.freeze_support() # need for pyinstall exe
     stop_event = multiprocessing.Event()
     process = None
-    start_pressed = False
     mouse_controll_lock = False
+    start_pressed = False
+    
+    image_position_x = 0
+    image_position_y = 0
 
     keyboard_listener = keyboard.Listener(on_press=on_press, on_release=on_release)
     keyboard_listener.start()
