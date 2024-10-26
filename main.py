@@ -19,7 +19,7 @@ pip install pyinstaller
 
 kb_controller = keyboard.Controller()
 ms_controller = mouse.Controller()
-def mecro_event(stop_event):  
+def macro_event(stop_event):  
     while not stop_event.is_set():
         # kb_controller.press(keyboard.Key.space)
         # kb_controller.release(keyboard.Key.space)
@@ -40,7 +40,7 @@ def mecro_event(stop_event):
 # Image Click Version
 images = ["./1.png", "./2.png", "./3.png", "./4.png"]
 fail_images = ["./1.png", "./2.png", "./3_f.png", "./3_f.png"]
-def image_mecro_event(stop_event):
+def image_macro_event(stop_event):
     while not stop_event.is_set():
         for num in range(len(images)):
             isFail = False
@@ -74,26 +74,26 @@ def on_click(x, y, button, pressed):
     if button == mouse.Button.left and pressed:
         if not start_pressed:
             start_pressed = True
-            mecro_start()
+            macro_start()
     elif button == mouse.Button.right and pressed:
         if start_pressed:
             start_pressed = False
-            mecro_pause()
+            macro_pause()
         else:
-            mecro_stop()
+            macro_stop()
             listener_stop()
             exe_exit()
 
-def mecro_start():
+def macro_start():
     global process, start_pressed
     if process is None or not process.is_alive():
         print("Starting to macro.")
         stop_event.clear()
-        # process = multiprocessing.Process(target=mecro_event, args=(stop_event,))
-        process = multiprocessing.Process(target=image_mecro_event, args=(stop_event,))
+        # process = multiprocessing.Process(target=macro_event, args=(stop_event,))
+        process = multiprocessing.Process(target=image_macro_event, args=(stop_event,))
         process.start()
             
-def mecro_pause():
+def macro_pause():
     global process
     if process:
         print("Stopping the macro.")
@@ -101,7 +101,7 @@ def mecro_pause():
         process.join()
         process = None
 
-def mecro_stop():
+def macro_stop():
     global process
     if process:
         stop_event.set()
@@ -122,16 +122,16 @@ def on_press(key):
     global start_pressed
     if key == keyboard.Key.page_up:
         start_pressed = True
-        mecro_start()
+        macro_start()
 
 def on_release(key):
     global start_pressed
     if key == keyboard.Key.page_down:
         if start_pressed:
             start_pressed = False
-            mecro_pause()
+            macro_pause()
         else:
-            mecro_stop()
+            macro_stop()
             listener_stop()
             exe_exit()
             
