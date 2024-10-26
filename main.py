@@ -39,11 +39,14 @@ def mecro_event(stop_event):
 
 # Image Click Version
 images = ["./1.png", "./2.png", "./3.png", "./4.png"]
+fail_images = ["./1.png", "./2.png", "./3_f.png", "./3_f.png"]
 def image_mecro_event(stop_event):
     while not stop_event.is_set():
-        for image_path in images:
+        for num in range(len(images)):
+            isFail = False
             while not stop_event.is_set():
-                result = image_check_screen_all(image_path)
+                find_image_path = images[num] if not isFail else fail_images[num]
+                result = image_check_screen_all(find_image_path)
                 if(result):
                     pyautogui.moveTo(image_position_x, image_position_y)
                     # pyautogui.click(x=image_position_x, y=image_position_y)
@@ -55,6 +58,8 @@ def image_mecro_event(stop_event):
                     ms_controller.release(mouse.Button.left)
                     time.sleep(1)
                     break
+                
+                isFail = not isFail
         
 def on_click(x, y, button, pressed):
     global start_pressed, mouse_controll_lock
