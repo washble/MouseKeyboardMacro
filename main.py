@@ -17,49 +17,15 @@ pip install pyinstaller
 > pyinstaller -F main.py
 '''
 
-kb_controller = keyboard.Controller()
-ms_controller = mouse.Controller()
-def macro_event(stop_event):  
-    while not stop_event.is_set():
-        # kb_controller.press(keyboard.Key.space)
-        # kb_controller.release(keyboard.Key.space)
-        # time.sleep(2)
-        
-        # kb_controller.press(keyboard.Key.f5)
-        # kb_controller.release(keyboard.Key.f5)
-        # time.sleep(2.5 + random.random())
-        
-        ms_controller.press(mouse.Button.left)
-        time.sleep(0.001)
-        ms_controller.release(mouse.Button.left)
-        # time.sleep(1.5)
-        time.sleep(0.01)
-        
-        # kb_controller.press(keyboard.KeyCode.from_char('w'))
+from page0 import Page
+page = Page()
 
-# Image Click Version
-images = ["./1.png", "./2.png", "./3.png", "./4.png"]
-fail_images = ["./1.png", "./2.png", "./3_f.png", "./3_f.png"]
-def image_macro_event(stop_event):
+def macro_event(stop_event):
+    page.progress(stop_event)
+
+def macro_event_loop(stop_event): 
     while not stop_event.is_set():
-        for num in range(len(images)):
-            isFail = False
-            while not stop_event.is_set():
-                find_image_path = images[num] if not isFail else fail_images[num]
-                result = image_check_screen_all(find_image_path)
-                if(result):
-                    pyautogui.moveTo(image_position_x, image_position_y)
-                    # pyautogui.click(x=image_position_x, y=image_position_y)
-                    # time.sleep(0.5)
-                    
-                    time.sleep(1)
-                    ms_controller.press(mouse.Button.left)
-                    time.sleep(0.02)
-                    ms_controller.release(mouse.Button.left)
-                    time.sleep(1)
-                    break
-                
-                isFail = not isFail
+        page.progress(stop_event)
         
 def on_click(x, y, button, pressed):
     global start_pressed, mouse_controll_lock
@@ -90,7 +56,7 @@ def macro_start():
         print("Starting to macro.")
         stop_event.clear()
         # process = multiprocessing.Process(target=macro_event, args=(stop_event,))
-        process = multiprocessing.Process(target=image_macro_event, args=(stop_event,))
+        process = multiprocessing.Process(target=macro_event_loop, args=(stop_event,))
         process.start()
             
 def macro_pause():
@@ -134,30 +100,13 @@ def on_release(key):
             macro_stop()
             listener_stop()
             exe_exit()
-            
-def image_check_screen_all(image):
-    global image_position_x, image_position_y
-    try:
-        image_position_x, image_position_y = pyautogui.locateCenterOnScreen(image, confidence=0.95)
-        return True
-    except Exception as e:
-        print(f'Error in {image} image_check: {e}')
-        return False
-            
-def image_check_screen_range(image, screen_range):
-    global image_position_x, image_position_y
-    try:
-        image_position_x, image_position_y = pyautogui.locateCenterOnScreen(image, confidence=0.95, region=screen_range)
-        return True
-    except Exception as e:
-        print(f'Error in {image} image_check: {e}')
-        return False
 
 if __name__ == "__main__":
     print("Version 1.0.0")
     
     multiprocessing.freeze_support() # need for pyinstall exe
     stop_event = multiprocessing.Event()
+    
     process = None
     mouse_controll_lock = False
     start_pressed = False
@@ -173,3 +122,7 @@ if __name__ == "__main__":
 
     keyboard_listener.join()
     mouse_listener.join()
+
+    # Sample of sharing variables across processes
+    # manager = multiprocessing.Manager()
+    # start_pressed = manager.Value('b', False)   # 'b' indicates boolean type; this allows sharing variables across processes.

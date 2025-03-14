@@ -1,0 +1,6 @@
+__pycache__
+build
+dist
+*.png
+main.spec
+test_page.py
