@@ -23,7 +23,7 @@ page = Page()
 def macro_event(stop_event):
     page.progress(stop_event)
 
-def macro_event_loop(stop_event): 
+def macro_event_loop(stop_event):
     while not stop_event.is_set():
         page.progress(stop_event)
         
@@ -55,8 +55,8 @@ def macro_start():
     if process is None or not process.is_alive():
         print("Starting to macro.")
         stop_event.clear()
-        # process = multiprocessing.Process(target=macro_event, args=(stop_event,))
-        process = multiprocessing.Process(target=macro_event_loop, args=(stop_event,))
+        process = multiprocessing.Process(target=macro_event, args=(stop_event,))
+        # process = multiprocessing.Process(target=macro_event_loop, args=(stop_event,))
         process.start()
             
 def macro_pause():
