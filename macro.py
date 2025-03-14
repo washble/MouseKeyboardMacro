@@ -32,9 +32,20 @@ class Macro:
             print(f'Error in {image} image_check: {e}')
             
             return (False, 0, 0)
+                    
+    def image_check_screen_range(self, image, screen_range, confidence=0.95):
+        global image_position_x, image_position_y
+        try:
+            image_position_x, image_position_y = pyautogui.locateCenterOnScreen(image, confidence=confidence, region=screen_range)
+            
+            return (True, image_position_x, image_position_y)
+        except Exception as e:
+            print(f'Error in {image} image_check: {e}')
+            
+            return (False, 0, 0)
     
-    # Perform high-accuracy image search and click
-    def image_click_in_screenshot_all(self, image, threshold=0.95):
+    # Perform high-accuracy image search
+    def image_check_in_screenshot_all(self, image, threshold=0.95):
         try:
             template = cv2.imread(image)
 
@@ -54,28 +65,49 @@ class Macro:
                 image_position_x = matched_x_positions[0] + (template.shape[1] >> 1)  # Using bitwise right shift for division by 2
                 image_position_y = matched_y_positions[0] + (template.shape[0] >> 1)  # Using bitwise right shift for division by 2
                 
-                pyautogui.moveTo(image_position_x, image_position_y)
-                self._ms_controller.press(mouse.Button.left)
-                time.sleep(0.02)
-                self._ms_controller.release(mouse.Button.left)
-                
-                return True
+                return (True, image_position_x, image_position_y)
 
-            return False
+            return (False, 0, 0)
 
         except Exception as e:
             print(f'Error in {image} image_check: {e}')
-            return False
-                
-    def image_check_screen_range(self, image, screen_range, confidence=0.95):
-        global image_position_x, image_position_y
+            return (False, 0, 0)
+        
+    # Perform high-accuracy image search within a specified screen range
+    def image_check_in_screenshot_range(self, image, screen_range, threshold=0.95):
         try:
-            image_position_x, image_position_y = pyautogui.locateCenterOnScreen(image, confidence=confidence, region=screen_range)
+            template = cv2.imread(image)
+
+            # Take a screenshot
+            screenshot = pyautogui.screenshot()
+            screenshot = cv2.cvtColor(np.array(screenshot), cv2.COLOR_RGB2BGR)
             
-            return (True, image_position_x, image_position_y)
+            # Crop the screenshot to the specified screen range
+            # x: The x-coordinate of the top-left corner of the region to search
+            # y: The y-coordinate of the top-left corner of the region to search
+            # width: The width of the search region
+            # height: The height of the search region
+            x, y, width, height = screen_range
+            cropped_screenshot = screenshot[y:y+height, x:x+width]
+
+            # Image matching
+            result = cv2.matchTemplate(cropped_screenshot, template, cv2.TM_CCOEFF_NORMED)
+            matched_y_positions, matched_x_positions = np.where(result >= threshold)
+
+            # If a matching position is found
+            if len(matched_x_positions) > 0:
+                # image_position_x = matched_x_positions[0] + x + template.shape[1] // 2
+                # image_position_y = matched_y_positions[0] + y + template.shape[0] // 2
+                # Calculate the center position directly
+                image_position_x = matched_x_positions[0] + x + (template.shape[1] >> 1)  # Adjust for cropped area
+                image_position_y = matched_y_positions[0] + y + (template.shape[0] >> 1)  # Adjust for cropped area
+                
+                return (True, image_position_x, image_position_y)
+
+            return (False, 0, 0)
+
         except Exception as e:
             print(f'Error in {image} image_check: {e}')
-            
             return (False, 0, 0)
     
     # Perform simple image search and click
