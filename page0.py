@@ -26,13 +26,13 @@ class Page:
             cur_sequence = self.sequence[self.index]
             result = self.invoke(cur_sequence)
             
-            # print(f"progress====> {self.index}")
+            # print(f"progress====> {self.index} Result: {result}")
             
             if not result:
                 fallback_index = cur_sequence[2]
                 self.index = fallback_index
                 
-                # print(f"fallback_index====> {self.index}")
+                # print(f"fallback_index====> {fallback_index}")
             else:
                 self.index += 1
         

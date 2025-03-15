@@ -27,22 +27,22 @@ class Macro:
         try:
             image_position_x, image_position_y = pyautogui.locateCenterOnScreen(image, confidence=confidence)
             
-            return (True, image_position_x, image_position_y)
+            return True
         except Exception as e:
             print(f'Error in {image} image_check: {e}')
             
-            return (False, 0, 0)
+            return False
                     
     def image_check_screen_range(self, image, screen_range, confidence=0.95):
         global image_position_x, image_position_y
         try:
             image_position_x, image_position_y = pyautogui.locateCenterOnScreen(image, confidence=confidence, region=screen_range)
             
-            return (True, image_position_x, image_position_y)
+            return True
         except Exception as e:
             print(f'Error in {image} image_check: {e}')
             
-            return (False, 0, 0)
+            return False
     
     # Perform high-accuracy image search
     def image_check_in_screenshot_all(self, image, threshold=0.95):
@@ -65,9 +65,9 @@ class Macro:
                 image_position_x = matched_x_positions[0] + (template.shape[1] >> 1)  # Using bitwise right shift for division by 2
                 image_position_y = matched_y_positions[0] + (template.shape[0] >> 1)  # Using bitwise right shift for division by 2
                 
-                return (True, image_position_x, image_position_y)
+                return True
 
-            return (False, 0, 0)
+            return False
 
         except Exception as e:
             print(f'Error in {image} image_check: {e}')
@@ -102,13 +102,13 @@ class Macro:
                 image_position_x = matched_x_positions[0] + x + (template.shape[1] >> 1)  # Adjust for cropped area
                 image_position_y = matched_y_positions[0] + y + (template.shape[0] >> 1)  # Adjust for cropped area
                 
-                return (True, image_position_x, image_position_y)
+                return True
 
-            return (False, 0, 0)
+            return False
 
         except Exception as e:
             print(f'Error in {image} image_check: {e}')
-            return (False, 0, 0)
+            return False
     
     # Perform simple image search and click
     def image_click_in_screen_all(self, image, confidence=0.95):
