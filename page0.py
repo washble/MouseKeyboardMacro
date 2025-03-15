@@ -40,23 +40,4 @@ class Page:
         func, params, fallback = sequence
         
         return func(*params)    # Unpack parameters to call the function
-
-    def search_word(self, search_word):
-        try:
-            self.kb_controller.press(keyboard.Key.ctrl)
-            self.kb_controller.press('f')
-            self.kb_controller.release('f')
-            self.kb_controller.release(keyboard.Key.ctrl)
-            
-            for char in search_word:
-                self.kb_controller.press(char)
-                self.kb_controller.release(char)
-                
-            self.kb_controller.press(keyboard.Key.enter)
-            self.kb_controller.release(keyboard.Key.enter)
-            
-            return True
-        except Exception as e:
-            print(f'Error in {search_word} search_word: {e}')
-            
-            return False
+    
