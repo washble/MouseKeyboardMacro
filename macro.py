@@ -34,7 +34,6 @@ class Macro:
             return False
                     
     def image_check_screen_range(self, image, screen_range, confidence=0.95):
-        global image_position_x, image_position_y
         try:
             image_position_x, image_position_y = pyautogui.locateCenterOnScreen(image, confidence=confidence, region=screen_range)
             
