@@ -1,4 +1,3 @@
-from typing import Optional
 import time
 from pynput import mouse, keyboard  # pip install pynput,  #1.6.8 version because pyinstaller
 import pyautogui  # pip install PyAutoGUI

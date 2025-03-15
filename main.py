@@ -51,8 +51,8 @@ def macro_start():
     if process is None or not process.is_alive():
         print("Starting to macro.")
         stop_event.clear()
-        process = multiprocessing.Process(target=macro_event, args=(stop_event,))
-        # process = multiprocessing.Process(target=macro_event_loop, args=(stop_event,))
+        # process = multiprocessing.Process(target=macro_event, args=(stop_event,))
+        process = multiprocessing.Process(target=macro_event_loop, args=(stop_event,))
         process.start()
             
 def macro_pause():

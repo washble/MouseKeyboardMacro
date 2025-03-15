@@ -1,5 +1,4 @@
 import multiprocessing
-from pynput import mouse, keyboard  # pip install pynput,  #1.6.8 version because pyinstaller
 from typing import Optional
 
 from macro import Macro
