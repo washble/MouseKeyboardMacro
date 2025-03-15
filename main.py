@@ -1,10 +1,6 @@
-import time
 import multiprocessing
 import sys
 from pynput import mouse, keyboard  # pip install pynput,  #1.6.8 version because pyinstaller
-# import random
-# import cv2  # pip install opencv-python
-import pyautogui  # pip install PyAutoGUI
 
 '''
 pip install pyinstaller

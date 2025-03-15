@@ -3,7 +3,7 @@ import os
 import time
 from pynput import mouse, keyboard  # pip install pynput,  #1.6.8 version because pyinstaller
 import pyautogui  # pip install PyAutoGUI
-import cv2
+import cv2  # pip install opencv-python
 import numpy as np
 
 class Macro:
