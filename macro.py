@@ -3,6 +3,7 @@ from pynput import mouse, keyboard  # pip install pynput,  #1.6.8 version becaus
 import pyautogui  # pip install PyAutoGUI
 import cv2  # pip install opencv-python
 import numpy as np
+from typing import Optional
 
 class Macro:
     def __init__(self):
@@ -145,7 +146,7 @@ class Macro:
                 
                 pyautogui.moveTo(image_position_x, image_position_y)
                 self._ms_controller.press(mouse.Button.left)
-                time.sleep(0.02)
+                time.sleep(0.01)
                 self._ms_controller.release(mouse.Button.left)
                 
                 return True
@@ -155,8 +156,19 @@ class Macro:
         except Exception as e:
             print(f'Error in {image} image_check: {e}')
             return False
+
+    def key_press_release(self, key: Optional[keyboard.Key] = None):
+        try:
+            self._kb_controller.press(key)
+            time.sleep(0.01)
+            self._kb_controller.release(key)
+
+            return True
+        except Exception as e:
+            print(f'Error in {key} key_press_release: {e}')
+            return False
         
     def mouse_left_click(self):
         self._ms_controller.press(mouse.Button.left)
-        time.sleep(0.02)
+        time.sleep(0.01)
         self._ms_controller.release(mouse.Button.left)
